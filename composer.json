@@ -1,5 +1,5 @@
 {
-    "name": "aerni/translator",
+    "name": "shellrent/statamic-translator",
     "description": "Translate your content with the click of a button",
     "keywords": [
         "statamic",
@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": "^7.4",
+        "php": "^7.4 || ^8.0",
         "google/cloud-translate": "^1.9.0",
         "statamic/cms": "^3.0.0"
     },
