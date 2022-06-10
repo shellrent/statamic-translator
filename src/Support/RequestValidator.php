@@ -79,6 +79,10 @@ class RequestValidator
             throw TranslationFailed::canNotTranslateRoot();
         }
 
+        if ($entry->root()->locale() === $site) {
+            throw TranslationFailed::canNotTranslateSameLocale();
+        }
+
         return true;
     }
 
@@ -109,6 +113,14 @@ class RequestValidator
      */
     public static function canProcessTerm(LocalizedTerm $entry, string $site): bool
     {
+        if ($entry->isRoot()) {
+            throw TranslationFailed::canNotTranslateRoot();
+        }
+
+        if ($entry->origin()->locale() === $site) {
+            throw TranslationFailed::canNotTranslateSameLocale();
+        }
+
         return true;
     }
 }

@@ -223,7 +223,6 @@ trait PreparesData
     protected function dataToTranslate(): array
     {
         return $this->translatableData()
-            ->replaceRecursive($this->localizedData())
             ->except(['updated_by', 'updated_at'])
             ->toArray();
     }

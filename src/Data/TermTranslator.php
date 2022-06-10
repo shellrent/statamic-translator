@@ -24,9 +24,4 @@ class TermTranslator extends BasicTranslator
     {
         return $this->entry->inDefaultLocale()->data();
     }
-
-    protected function localizedData(): Collection
-    {
-        return $this->entry->in($this->site)->data();
-    }
 }

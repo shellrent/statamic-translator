@@ -55,11 +55,4 @@ abstract class BasicTranslator implements Translator
      * @return Collection
      */
     abstract protected function rootData(): Collection;
-
-    /**
-     * Get the entry's localized data.
-     *
-     * @return Collection
-     */
-    abstract protected function localizedData(): Collection;
 }

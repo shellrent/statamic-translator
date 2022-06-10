@@ -24,9 +24,4 @@ class GlobalSetTranslator extends BasicTranslator
     {
         return $this->entry->inDefaultSite()->data();
     }
-
-    protected function localizedData(): Collection
-    {
-        return $this->entry->in($this->site)->data();
-    }
 }

@@ -24,9 +24,4 @@ class EntryTranslator extends BasicTranslator
     {
         return $this->entry->root()->data();
     }
-
-    protected function localizedData(): Collection
-    {
-        return $this->entry->data();
-    }
 }
