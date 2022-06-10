@@ -72,6 +72,10 @@ trait PreparesData
                     'slug', 'table', 'tags', 'text', 'textarea',
                 ];
 
+                if( !isset( $item['type'] )) {
+                    return false;
+                }
+
                 $supported = in_array($item['type'], $supportedFieldtypes);
 
                 if (! $supported) {
