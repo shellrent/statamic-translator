@@ -43,7 +43,7 @@ class TranslatorProcessor
     protected function successResponse(): Response
     {
         return response()->json([
-            'message' => __('translator::fieldtypes.translator.vue_component.success'),
+            'message' => __('statamic-translator::fieldtypes.translator.vue_component.success'),
         ], 200);
     }
 }

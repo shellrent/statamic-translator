@@ -21,9 +21,9 @@ class Translator extends Fieldtype
         return [
             'button_label' => [
                 'type' => 'text',
-                'title' => __('translator::fieldtypes.translator.config_fields.button_label.title'),
-                'instructions' => __('translator::fieldtypes.translator.config_fields.button_label.instructions'),
-                'default' => __('translator::fieldtypes.translator.config_fields.button_label.default'),
+                'title' => __('statamic-translator::fieldtypes.translator.config_fields.button_label.title'),
+                'instructions' => __('statamic-translator::fieldtypes.translator.config_fields.button_label.instructions'),
+                'default' => __('statamic-translator::fieldtypes.translator.config_fields.button_label.default'),
                 'width' => 50,
             ],
         ];

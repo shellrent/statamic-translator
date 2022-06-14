@@ -2,8 +2,8 @@
     <div style="background: #f1f5f9;">
         <div v-if="isEditingRoot">
             <flash-message
-                :title="getTranslation('translator::fieldtypes.translator.vue_component.error_unavailable')"
-                :text="getTranslation('translator::fieldtypes.translator.vue_component.error_default_locale')"
+                :title="getTranslation('statamic-translator::fieldtypes.translator.vue_component.error_unavailable')"
+                :text="getTranslation('statamic-translator::fieldtypes.translator.vue_component.error_default_locale')"
                 type="info"
             ></flash-message>
         </div>
@@ -11,15 +11,15 @@
             <div v-if="!isSupportedSourceLanguage || !isSupportedTargetLanguage">
                 <div v-if="!isSupportedSourceLanguage">
                     <flash-message
-                        :title="getTranslation('translator::fieldtypes.translator.vue_component.error_unavailable')"
-                        :text="getTranslation('translator::fieldtypes.translator.vue_component.error_source_locale')"
+                        :title="getTranslation('statamic-translator::fieldtypes.translator.vue_component.error_unavailable')"
+                        :text="getTranslation('statamic-translator::fieldtypes.translator.vue_component.error_source_locale')"
                         type="info"
                     ></flash-message>
                 </div>
                 <div v-else>
                     <flash-message
-                        :title="getTranslation('translator::fieldtypes.translator.vue_component.error_unavailable')"
-                        :text="getTranslation('translator::fieldtypes.translator.vue_component.error_target_locale')"
+                        :title="getTranslation('statamic-translator::fieldtypes.translator.vue_component.error_unavailable')"
+                        :text="getTranslation('statamic-translator::fieldtypes.translator.vue_component.error_target_locale')"
                         type="info"
                     ></flash-message>
                 </div>
@@ -43,22 +43,22 @@
                 </div>
                 <div v-if="translating">
                     <flash-message
-                        :title="getTranslation('translator::fieldtypes.translator.vue_component.translating_title')"
-                        :text="getTranslation('translator::fieldtypes.translator.vue_component.translating_message')"
+                        :title="getTranslation('statamic-translator::fieldtypes.translator.vue_component.translating_title')"
+                        :text="getTranslation('statamic-translator::fieldtypes.translator.vue_component.translating_message')"
                         type="loading"
                     ></flash-message>
                 </div>
                 <div v-if="translated">
                     <flash-message
-                        :title="getTranslation('translator::fieldtypes.translator.vue_component.success')"
-                        :text="getTranslation('translator::fieldtypes.translator.vue_component.reload')"
+                        :title="getTranslation('statamic-translator::fieldtypes.translator.vue_component.success')"
+                        :text="getTranslation('statamic-translator::fieldtypes.translator.vue_component.reload')"
                         type="success"
                     ></flash-message>
                 </div>
                 <div v-if="error">
                     <flash-message
-                        :title="getTranslation('translator::fieldtypes.translator.vue_component.error_general')"
-                        :text="getTranslation('translator::fieldtypes.translator.vue_component.error_console')"
+                        :title="getTranslation('statamic-translator::fieldtypes.translator.vue_component.error_general')"
+                        :text="getTranslation('statamic-translator::fieldtypes.translator.vue_component.error_console')"
                         type="error"
                     ></flash-message>
                 </div>
