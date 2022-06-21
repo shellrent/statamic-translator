@@ -5,7 +5,6 @@ namespace Aerni\Translator\Data\Concerns;
 use Aerni\Translator\Support\Utils;
 use Facades\Aerni\Translator\Contracts\TranslationService;
 use Statamic\Facades\Site;
-use Statamic\Support\Str;
 
 trait TranslatesData {
     abstract protected function dataToTranslate(): array;
@@ -46,16 +45,6 @@ trait TranslatesData {
      */
     protected function targetLanguage(): string {
         return Site::get( $this->site )->shortLocale();
-    }
-
-    protected function slug(): string {
-        $slug = $this->entry->slug();
-
-        if( !array_key_exists( 'slug', $this->translatableFields() ) ) {
-            return $slug;
-        }
-
-        return TranslationService::translateText( Str::deslugify( $slug ), $this->targetLanguage(), 'text' );
     }
 
     /**
