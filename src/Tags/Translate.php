@@ -7,19 +7,17 @@ use Illuminate\Support\Facades\Cache;
 use Statamic\Facades\Site;
 use Statamic\Tags\Tags;
 
-class Translate extends Tags
-{
+class Translate extends Tags {
     /**
      * The {{ translate:value }} tag.
      *
      * @return string
      */
-    public function wildcard($value): string
-    {
-        $value = $this->context->pull($value);
-        $locale = $this->params->pull('locale') ?? Site::current()->shortLocale();
+    public function wildcard( $value ): string {
+        $value = $this->context->pull( $value );
+        $locale = $this->params->pull( 'locale' ) ?? Site::current()->shortLocale();
 
-        return $this->translate($value, $locale);
+        return $this->translate( $value, $locale );
     }
 
     /**
@@ -27,12 +25,11 @@ class Translate extends Tags
      *
      * @return string
      */
-    public function index(): string
-    {
-        $value = $this->params->pull('value');
-        $locale = $this->params->pull('locale') ?? Site::current()->shortLocale();
+    public function index(): string {
+        $value = $this->params->pull( 'value' );
+        $locale = $this->params->pull( 'locale' ) ?? Site::current()->shortLocale();
 
-        return $this->translate($value, $locale);
+        return $this->translate( $value, $locale );
     }
 
     /**
@@ -40,16 +37,16 @@ class Translate extends Tags
      *
      * @param string $value
      * @param string $locale
+     *
      * @return string
      */
-    protected function translate(string $value, string $locale): string
-    {
-        if ($locale === Site::default()->shortLocale()) {
+    protected function translate( string $value, string $locale ): string {
+        if( $locale === Site::default()->shortLocale() ) {
             return $value;
         }
 
-        return Cache::rememberForever("{$value}_{$locale}", function () use ($value, $locale) {
-            return TranslationService::translateText($value, $locale);
-        });
+        return Cache::rememberForever( "{$value}_{$locale}", function() use ( $value, $locale ) {
+            return TranslationService::translateText( $value, $locale );
+        } );
     }
 }

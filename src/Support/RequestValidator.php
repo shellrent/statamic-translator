@@ -10,31 +10,30 @@ use Statamic\Facades\Site;
 use Statamic\Globals\GlobalSet;
 use Statamic\Taxonomies\LocalizedTerm;
 
-class RequestValidator
-{
+class RequestValidator {
     /**
      * Check if the request includes all the necessary parameters
      * to process the translation.
      *
      * @param Request $request
-     * @return bool
+     *
      * @throws TranslationFailed
+     * @return bool
      */
-    public static function isValid(Request $request): bool
-    {
-        if (! $request->id) {
+    public static function isValid( Request $request ): bool {
+        if( !$request->id ) {
             throw TranslationFailed::missingId();
         }
 
-        if (! Data::find($request->id)) {
+        if( !Data::find( $request->id ) ) {
             throw TranslationFailed::invalidId();
         }
 
-        if (! $request->site) {
+        if( !$request->site ) {
             throw TranslationFailed::missingSite();
         }
 
-        if (! Site::get($request->site)) {
+        if( !Site::get( $request->site ) ) {
             throw TranslationFailed::invalidSite();
         }
 
@@ -45,20 +44,20 @@ class RequestValidator
      * Check if an entry is a supported content type.
      *
      * @param mixed $entry
-     * @return bool
+     *
      * @throws TranslationFailed
+     * @return bool
      */
-    public static function isSupportedType($entry): bool
-    {
-        if ($entry instanceof \Statamic\Entries\Entry) {
+    public static function isSupportedType( $entry ): bool {
+        if( $entry instanceof \Statamic\Entries\Entry ) {
             return true;
         }
 
-        if ($entry instanceof \Statamic\Globals\GlobalSet) {
+        if( $entry instanceof \Statamic\Globals\GlobalSet ) {
             return true;
         }
 
-        if ($entry instanceof \Statamic\Taxonomies\LocalizedTerm) {
+        if( $entry instanceof \Statamic\Taxonomies\LocalizedTerm ) {
             return true;
         }
 
@@ -70,16 +69,16 @@ class RequestValidator
      *
      * @param Entry $entry
      * @param string $site
-     * @return bool
+     *
      * @throws TranslationFailed
+     * @return bool
      */
-    public static function canProcessEntry(Entry $entry, string $site): bool
-    {
-        if ($entry->isRoot()) {
+    public static function canProcessEntry( Entry $entry, string $site ): bool {
+        if( $entry->isRoot() ) {
             throw TranslationFailed::canNotTranslateRoot();
         }
 
-        if ($entry->root()->locale() === $site) {
+        if( $entry->root()->locale() === $site ) {
             throw TranslationFailed::canNotTranslateSameLocale();
         }
 
@@ -91,12 +90,12 @@ class RequestValidator
      *
      * @param GlobalSet $entry
      * @param string $site
-     * @return bool
+     *
      * @throws TranslationFailed
+     * @return bool
      */
-    public static function canProcessGlobalSet(GlobalSet $entry, string $site): bool
-    {
-        if ($entry->in($site)->origin() === null) {
+    public static function canProcessGlobalSet( GlobalSet $entry, string $site ): bool {
+        if( $entry->in( $site )->origin() === null ) {
             throw TranslationFailed::canNotTranslateRoot();
         }
 
@@ -108,16 +107,16 @@ class RequestValidator
      *
      * @param LocalizedTerm $entry
      * @param string $site
-     * @return bool
+     *
      * @throws TranslationFailed
+     * @return bool
      */
-    public static function canProcessTerm(LocalizedTerm $entry, string $site): bool
-    {
-        if ($entry->isRoot()) {
+    public static function canProcessTerm( LocalizedTerm $entry, string $site ): bool {
+        if( $entry->isRoot() ) {
             throw TranslationFailed::canNotTranslateRoot();
         }
 
-        if ($entry->origin()->locale() === $site) {
+        if( $entry->origin()->locale() === $site ) {
             throw TranslationFailed::canNotTranslateSameLocale();
         }
 

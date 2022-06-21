@@ -7,15 +7,14 @@ use Aerni\Translator\Data\Concerns\PreparesData;
 use Aerni\Translator\Data\Concerns\TranslatesData;
 use Illuminate\Support\Collection;
 
-abstract class BasicTranslator implements Translator
-{
+abstract class BasicTranslator implements Translator {
     use PreparesData, TranslatesData;
 
     protected $entry;
+
     protected $site;
 
-    public function __construct($entry, string $site)
-    {
+    public function __construct( $entry, string $site ) {
         $this->entry = $entry;
         $this->site = $site;
     }
@@ -26,8 +25,7 @@ abstract class BasicTranslator implements Translator
      * @return \Statamic\Entries\Entry
      * @return \Statamic\Globals\GlobalSet
      */
-    public function process()
-    {
+    public function process() {
         $this
             ->ensureCanProcess()
             ->translate();

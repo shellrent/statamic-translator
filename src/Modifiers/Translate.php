@@ -7,20 +7,19 @@ use Illuminate\Support\Facades\Cache;
 use Statamic\Facades\Site;
 use Statamic\Modifiers\Modifier;
 
-class Translate extends Modifier
-{
+class Translate extends Modifier {
     /**
      * Translate a value to a target locale
      *
      * @param mixed $value
      * @param array $params
+     *
      * @return string
      */
-    public function index($value, $params): string
-    {
-        $locale = array_get($params, 0) ?? Site::current()->shortLocale();
+    public function index( $value, $params ): string {
+        $locale = array_get( $params, 0 ) ?? Site::current()->shortLocale();
 
-        return $this->translate($value, $locale);
+        return $this->translate( $value, $locale );
     }
 
     /**
@@ -28,16 +27,16 @@ class Translate extends Modifier
      *
      * @param string $value
      * @param string $locale
+     *
      * @return string
      */
-    protected function translate(string $value, string $locale): string
-    {
-        if ($locale === Site::default()->shortLocale()) {
+    protected function translate( string $value, string $locale ): string {
+        if( $locale === Site::default()->shortLocale() ) {
             return $value;
         }
 
-        return Cache::rememberForever("{$value}_{$locale}", function () use ($value, $locale) {
-            return TranslationService::translateText($value, $locale);
-        });
+        return Cache::rememberForever( "{$value}_{$locale}", function() use ( $value, $locale ) {
+            return TranslationService::translateText( $value, $locale );
+        } );
     }
 }

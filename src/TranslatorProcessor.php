@@ -7,43 +7,37 @@ use Aerni\Translator\Support\RequestValidator;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class TranslatorProcessor
-{
+class TranslatorProcessor {
     protected Request $request;
 
-    public function __construct(Request $request)
-    {
+    public function __construct( Request $request ) {
         $this->request = $request;
     }
 
-    public function process(): Response
-    {
+    public function process(): Response {
         return $this
             ->ensureValidRequest()
             ->translate()
             ->successResponse();
     }
 
-    protected function ensureValidRequest(): self
-    {
-        RequestValidator::isValid($this->request);
+    protected function ensureValidRequest(): self {
+        RequestValidator::isValid( $this->request );
 
         return $this;
     }
 
-    protected function translate(): self
-    {
-        (new DataTranslator($this->request->id, $this->request->site))
+    protected function translate(): self {
+        ( new DataTranslator( $this->request->id, $this->request->site ) )
             ->process()
             ->save();
 
         return $this;
     }
 
-    protected function successResponse(): Response
-    {
-        return response()->json([
-            'message' => __('statamic-translator::fieldtypes.translator.vue_component.success'),
-        ], 200);
+    protected function successResponse(): Response {
+        return response()->json( [
+            'message' => __( 'statamic-translator::fieldtypes.translator.vue_component.success' ),
+        ], 200 );
     }
 }

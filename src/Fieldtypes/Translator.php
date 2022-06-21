@@ -6,24 +6,23 @@ use Facades\Aerni\Translator\Contracts\TranslationService;
 use Statamic\Facades\Site;
 use Statamic\Fields\Fieldtype;
 
-class Translator extends Fieldtype
-{
+class Translator extends Fieldtype {
     protected $icon = 'translate';
-    protected $categories = ['special'];
+
+    protected $categories = [ 'special' ];
 
     /**
      * Add config fields to the fieldtype.
      *
      * @return array
      */
-    public function configFieldItems(): array
-    {
+    public function configFieldItems(): array {
         return [
             'button_label' => [
                 'type' => 'text',
-                'title' => __('statamic-translator::fieldtypes.translator.config_fields.button_label.title'),
-                'instructions' => __('statamic-translator::fieldtypes.translator.config_fields.button_label.instructions'),
-                'default' => __('statamic-translator::fieldtypes.translator.config_fields.button_label.default'),
+                'title' => __( 'statamic-translator::fieldtypes.translator.config_fields.button_label.title' ),
+                'instructions' => __( 'statamic-translator::fieldtypes.translator.config_fields.button_label.instructions' ),
+                'default' => __( 'statamic-translator::fieldtypes.translator.config_fields.button_label.default' ),
                 'width' => 50,
             ],
         ];
@@ -34,8 +33,7 @@ class Translator extends Fieldtype
      *
      * @return array
      */
-    public function preload(): array
-    {
+    public function preload(): array {
         return [
             'locales' => $this->locales(),
             'defaultLocale' => Site::default()->shortLocale(),
@@ -48,10 +46,9 @@ class Translator extends Fieldtype
      *
      * @return array
      */
-    protected function locales(): array
-    {
-        return Site::all()->mapWithKeys(function ($site, $key) {
-            return [$key => $site->shortLocale()];
-        })->all();
+    protected function locales(): array {
+        return Site::all()->mapWithKeys( function( $site, $key ) {
+            return [ $key => $site->shortLocale() ];
+        } )->all();
     }
 }

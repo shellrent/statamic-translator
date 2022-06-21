@@ -6,15 +6,14 @@ use Aerni\Translator\Contracts\TranslationService;
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Illuminate\Support\Facades\Cache;
 
-class GoogleAdvancedTranslationService implements TranslationService
-{
+class GoogleAdvancedTranslationService implements TranslationService {
     private $client;
+
     private $parent;
 
-    public function __construct(TranslationServiceClient $client, string $project)
-    {
+    public function __construct( TranslationServiceClient $client, string $project ) {
         $this->client = $client;
-        $this->parent = $this->client->locationName($project, 'global');
+        $this->parent = $this->client->locationName( $project, 'global' );
     }
 
     /**
@@ -23,15 +22,15 @@ class GoogleAdvancedTranslationService implements TranslationService
      * @param string $content
      * @param string $targetLanguage
      * @param string $format
+     *
      * @return string
      */
-    public function translateText(string $content, string $targetLanguage, string $format = 'html'): string
-    {
-        $mimeType = $this->getMimeType($format);
+    public function translateText( string $content, string $targetLanguage, string $format = 'html' ): string {
+        $mimeType = $this->getMimeType( $format );
 
         try {
             $response = $this->client->translateText(
-                [$content],
+                [ $content ],
                 $targetLanguage,
                 $this->parent,
                 [
@@ -49,12 +48,12 @@ class GoogleAdvancedTranslationService implements TranslationService
      * Detect the language of the given content.
      *
      * @param string $content
+     *
      * @return string
      */
-    public function detectLanguage(string $content): string
-    {
+    public function detectLanguage( string $content ): string {
         try {
-            $response = $this->client->detectLanguage($this->parent, ['content' => $content]);
+            $response = $this->client->detectLanguage( $this->parent, [ 'content' => $content ] );
 
             return $response->getLanguages()[0]->getLanguageCode();
         } finally {
@@ -67,18 +66,17 @@ class GoogleAdvancedTranslationService implements TranslationService
      *
      * @return array
      */
-    public function supportedLanguages(): array
-    {
+    public function supportedLanguages(): array {
         try {
-            return Cache::remember('supported_languages', 86400, function () {
-                $response = $this->client->getSupportedLanguages($this->parent);
+            return Cache::remember( 'supported_languages', 86400, function() {
+                $response = $this->client->getSupportedLanguages( $this->parent );
 
-                foreach ($response->getLanguages() as $language) {
+                foreach( $response->getLanguages() as $language ) {
                     $supportedLanguages[] = $language->getLanguageCode();
                 }
 
                 return $supportedLanguages;
-            });
+            } );
         } finally {
             $this->client->close();
         }
@@ -88,11 +86,11 @@ class GoogleAdvancedTranslationService implements TranslationService
      * Return the MIME type based on the $format.
      *
      * @param string $format
+     *
      * @return string
      */
-    private function getMimeType(string $format): string
-    {
-        if ($format === 'text') {
+    private function getMimeType( string $format ): string {
+        if( $format === 'text' ) {
             return 'text/plain';
         }
 

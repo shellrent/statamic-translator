@@ -23,7 +23,7 @@ return [
     |
     */
 
-    'google_translation_api_key' => env('GOOGLE_TRANSLATION_API_KEY'),
+    'google_translation_api_key' => env( 'GOOGLE_TRANSLATION_API_KEY' ),
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ return [
     |
     */
 
-    'google_application_credentials' => env('GOOGLE_APPLICATION_CREDENTIALS'),
+    'google_application_credentials' => env( 'GOOGLE_APPLICATION_CREDENTIALS' ),
 
     /*
     |--------------------------------------------------------------------------
@@ -45,5 +45,5 @@ return [
     |
     */
 
-    'google_cloud_project' => env('GOOGLE_CLOUD_PROJECT'),
+    'google_cloud_project' => env( 'GOOGLE_CLOUD_PROJECT' ),
 ];

@@ -9,16 +9,15 @@ use Statamic\Extend\Manifest;
 use Statamic\Providers\StatamicServiceProvider;
 use Statamic\Statamic;
 
-abstract class TestCase extends OrchestraTestCase
-{
+abstract class TestCase extends OrchestraTestCase {
     /**
      * Load package service provider
      *
      * @param \Illuminate\Foundation\Application $app
+     *
      * @return array
      */
-    protected function getPackageProviders($app): array
-    {
+    protected function getPackageProviders( $app ): array {
         return [
             TranslatorServiceProvider::class,
             StatamicServiceProvider::class,
@@ -29,10 +28,10 @@ abstract class TestCase extends OrchestraTestCase
      * Load package aliases
      *
      * @param \Illuminate\Foundation\Application $app
+     *
      * @return array
      */
-    protected function getPackageAliases($app): array
-    {
+    protected function getPackageAliases( $app ): array {
         return [
             'Statamic' => Statamic::class,
         ];
@@ -42,17 +41,17 @@ abstract class TestCase extends OrchestraTestCase
      * Load Environment
      *
      * @param \Illuminate\Foundation\Application $app
+     *
      * @return void
      */
-    protected function getEnvironmentSetUp($app): void
-    {
-        parent::getEnvironmentSetUp($app);
+    protected function getEnvironmentSetUp( $app ): void {
+        parent::getEnvironmentSetUp( $app );
 
         // Make sure the .env file is loaded
-        $app->useEnvironmentPath(__DIR__.'/..');
-        $app->bootstrapWith([LoadEnvironmentVariables::class]);
+        $app->useEnvironmentPath( __DIR__ . '/..' );
+        $app->bootstrapWith( [ LoadEnvironmentVariables::class ] );
 
-        $app->make(Manifest::class)->manifest = [
+        $app->make( Manifest::class )->manifest = [
             'aerni/translator' => [
                 'id' => 'aerni/translator',
                 'namespace' => 'Aerni\\Translator\\',
@@ -64,23 +63,23 @@ abstract class TestCase extends OrchestraTestCase
      * Resolve the application configuration and set the Statamic configuration
      *
      * @param \Illuminate\Foundation\Application $app
+     *
      * @return void
      */
-    protected function resolveApplicationConfiguration($app): void
-    {
-        parent::resolveApplicationConfiguration($app);
+    protected function resolveApplicationConfiguration( $app ): void {
+        parent::resolveApplicationConfiguration( $app );
 
         $configs = [
             'assets', 'cp', 'forms', 'routes', 'sites',
             'stache', 'static_caching', 'system', 'users',
         ];
 
-        foreach ($configs as $config) {
-            $app['config']->set("statamic.$config", require(__DIR__ . "/../vendor/statamic/cms/config/{$config}.php"));
+        foreach( $configs as $config ) {
+            $app['config']->set( "statamic.$config", require( __DIR__ . "/../vendor/statamic/cms/config/{$config}.php" ) );
         }
 
-        $app['config']->set('statamic.editions.pro', true);
+        $app['config']->set( 'statamic.editions.pro', true );
 
-        $app['config']->set('translator', require(__DIR__.'/../config/translator.php'));
+        $app['config']->set( 'translator', require( __DIR__ . '/../config/translator.php' ) );
     }
 }

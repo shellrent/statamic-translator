@@ -5,8 +5,7 @@ namespace Aerni\Translator\Data\Concerns;
 use Aerni\Translator\Support\Utils;
 use Illuminate\Support\Collection;
 
-trait PreparesData
-{
+trait PreparesData {
     /**
      * Get the translatable fields. A field is considered translatable
      * when 'localizable' is set to 'true' in the blueprint and
@@ -14,9 +13,8 @@ trait PreparesData
      *
      * @return array
      */
-    protected function translatableFields(): array
-    {
-        return $this->filterSupportedFieldtypes($this->localizableFields());
+    protected function translatableFields(): array {
+        return $this->filterSupportedFieldtypes( $this->localizableFields() );
     }
 
     /**
@@ -24,8 +22,7 @@ trait PreparesData
      *
      * @return array
      */
-    protected function localizableFields(): array
-    {
+    protected function localizableFields(): array {
         return $this->entry->blueprint()
             ->fields()
             ->localizable()
@@ -37,58 +34,59 @@ trait PreparesData
      * Filter the fields by supported fieldtypes.
      *
      * @param array $fields
+     *
      * @return array
      */
-    protected function filterSupportedFieldtypes(array $fields): array
-    {
-        return collect($fields)
-            ->map(function ($item) {
-                switch ($item['type'] ?? null ) {
+    protected function filterSupportedFieldtypes( array $fields ): array {
+        return collect( $fields )
+            ->map( function( $item ) {
+                switch( $item['type'] ?? null ) {
                     case 'replicator':
+                        break;
                     case 'bard':
-                        $item['sets'] = collect($item['sets'] ?? [])
-                            ->map(function ($set) {
-                                $set['fields'] = $this->filterSupportedFieldtypes($set['fields']);
+                        $item['sets'] = collect( $item['sets'] ?? [] )
+                            ->map( function( $set ) {
+                                $set['fields'] = $this->filterSupportedFieldtypes( $set['fields'] );
 
                                 return $set;
-                            })
-                            ->filter(function ($set) {
-                                return count($set['fields']) > 0;
-                            })
+                            } )
+                            ->filter( function( $set ) {
+                                return count( $set['fields'] ) > 0;
+                            } )
                             ->toArray();
 
                         break;
                     case 'grid':
-                        $item['fields'] = $this->filterSupportedFieldtypes($item['fields'] ?? []);
+                        $item['fields'] = $this->filterSupportedFieldtypes( $item['fields'] ?? [] );
 
                         break;
                 }
 
                 return $item;
-            })
-            ->filter(function ($item) {
+            } )
+            ->filter( function( $item ) {
                 $supportedFieldtypes = [
                     'array', 'bard', 'grid', 'list', 'markdown', 'replicator',
                     'slug', 'table', 'tags', 'text', 'textarea',
                 ];
 
-                if( !isset( $item['type'] )) {
+                if( !isset( $item['type'] ) ) {
                     return false;
                 }
 
-                $supported = in_array($item['type'], $supportedFieldtypes);
+                $supported = in_array( $item['type'], $supportedFieldtypes );
 
-                if (! $supported) {
+                if( !$supported ) {
                     return false;
                 }
 
-                switch ($item['type'] ?? null ) {
+                switch( $item['type'] ?? null ) {
                     case 'replicator':
-                        return count($item['sets'] ?? []) > 0;
+                        return count( $item['sets'] ?? [] ) > 0;
 
                         break;
                     case 'grid':
-                        return count($item['fields'] ?? []) > 0;
+                        return count( $item['fields'] ?? [] ) > 0;
 
                         break;
                     default:
@@ -96,17 +94,16 @@ trait PreparesData
                 }
 
                 return true;
-            })->toArray();
+            } )->toArray();
     }
 
     /**
-    * Get the translatable data.
-    *
-    * @return Collection
-    */
-    protected function translatableData(): Collection
-    {
-        return $this->rootData()->intersectByKeys($this->translatableFields());
+     * Get the translatable data.
+     *
+     * @return Collection
+     */
+    protected function translatableData(): Collection {
+        return $this->rootData()->intersectByKeys( $this->translatableFields() );
     }
 
     /**
@@ -114,11 +111,10 @@ trait PreparesData
      *
      * @return array
      */
-    protected function fieldKeys(): array
-    {
+    protected function fieldKeys(): array {
         return [
-            'allKeys' => $this->getTranslatableFieldKeys($this->translatableFields()),
-            'setKeys' => $this->getTranslatableSetKeys($this->translatableFields()),
+            'allKeys' => $this->getTranslatableFieldKeys( $this->translatableFields() ),
+            'setKeys' => $this->getTranslatableSetKeys( $this->translatableFields() ),
         ];
     }
 
@@ -126,91 +122,88 @@ trait PreparesData
      * Get the keys of translatable fields.
      *
      * @param array $fields
+     *
      * @return array
      */
-    protected function getTranslatableFieldKeys(array $fields): array
-    {
-        return collect($fields)->map(function ($item, $key) {
-            switch ($item['type'] ?? null) {
-
+    protected function getTranslatableFieldKeys( array $fields ): array {
+        return collect( $fields )->map( function( $item, $key ) {
+            switch( $item['type'] ?? null ) {
                 case 'bard':
-                    return collect($item['sets'])
-                        ->map(function ($set) {
-                            $set['fields'] = $this->getTranslatableFieldKeys($set['fields']);
+                    return collect( $item['sets'] )
+                        ->map( function( $set ) {
+                            $set['fields'] = $this->getTranslatableFieldKeys( $set['fields'] );
 
                             return $set['fields'];
-                        })->put('text', []);
+                        } )->put( 'text', [] );
 
                     break;
 
                 case 'replicator':
-                    return collect($item['sets'])
-                        ->map(function ($set) {
-                            $set['fields'] = $this->getTranslatableFieldKeys($set['fields']);
+                    return collect( $item['sets'] )
+                        ->map( function( $set ) {
+                            $set['fields'] = $this->getTranslatableFieldKeys( $set['fields'] );
 
                             return $set['fields'];
-                        });
+                        } );
 
                     break;
 
                 case 'grid':
-                    $item['fields'] = $this->getTranslatableFieldKeys($item['fields']);
+                    $item['fields'] = $this->getTranslatableFieldKeys( $item['fields'] );
 
                     return $item['fields'];
 
                     break;
 
                 case 'array':
-                    if (array_key_exists('keys', $item)) {
+                    if( array_key_exists( 'keys', $item ) ) {
                         return $item['keys'];
                     }
 
                     break;
-
             }
 
             return $key;
-        })->toArray();
+        } )->toArray();
     }
 
     /**
      * Get the keys of translatable Bard/Replicator sets.
      *
      * @param array $fields
+     *
      * @return array
      */
-    protected function getTranslatableSetKeys(array $fields): array
-    {
-        $sets = collect($fields)->map(function ($item) {
-            switch ($item['type'] ?? null) {
+    protected function getTranslatableSetKeys( array $fields ): array {
+        $sets = collect( $fields )->map( function( $item ) {
+            switch( $item['type'] ?? null ) {
 
                 case 'bard':
-                    return collect($item['sets'])
-                        ->map(function ($set) {
-                            $set['fields'] = $this->getTranslatableSetKeys($set['fields']);
+                    return collect( $item['sets'] )
+                        ->map( function( $set ) {
+                            $set['fields'] = $this->getTranslatableSetKeys( $set['fields'] );
 
                             return $set['fields'];
-                        })
-                        ->put('text', []);
+                        } )
+                        ->put( 'text', [] );
 
                     break;
 
                 case 'replicator':
-                    return collect($item['sets'])
-                        ->map(function ($set) {
-                            $set['fields'] = $this->getTranslatableSetKeys($set['fields']);
+                    return collect( $item['sets'] )
+                        ->map( function( $set ) {
+                            $set['fields'] = $this->getTranslatableSetKeys( $set['fields'] );
 
                             return $set['fields'];
-                        });
+                        } );
 
                     break;
-
             }
-        })->toArray();
+        } )->toArray();
 
-        $arrays = array_values(Utils::array_filter_recursive($sets, function ($item) {
-            return is_array($item);
-        }));
+        $arrays = array_values( Utils::array_filter_recursive( $sets, function( $item ) {
+            return is_array( $item );
+        } ) );
 
         return $arrays;
     }
@@ -220,10 +213,9 @@ trait PreparesData
      *
      * @return array
      */
-    protected function dataToTranslate(): array
-    {
+    protected function dataToTranslate(): array {
         return $this->translatableData()
-            ->except(['updated_by', 'updated_at'])
+            ->except( [ 'updated_by', 'updated_at' ] )
             ->toArray();
     }
 }

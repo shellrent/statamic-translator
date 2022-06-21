@@ -6,12 +6,10 @@ use Aerni\Translator\Contracts\TranslationService;
 use Google\Cloud\Translate\V2\TranslateClient;
 use Illuminate\Support\Facades\Cache;
 
-class GoogleBasicTranslationService implements TranslationService
-{
+class GoogleBasicTranslationService implements TranslationService {
     private $client;
 
-    public function __construct(TranslateClient $client)
-    {
+    public function __construct( TranslateClient $client ) {
         $this->client = $client;
     }
 
@@ -21,11 +19,11 @@ class GoogleBasicTranslationService implements TranslationService
      * @param string $content
      * @param string $targetLanguage
      * @param string $format
+     *
      * @return string
      */
-    public function translateText(string $content, string $targetLanguage, string $format = 'html'): string
-    {
-        $format = $this->getFormat($format);
+    public function translateText( string $content, string $targetLanguage, string $format = 'html' ): string {
+        $format = $this->getFormat( $format );
 
         $response = $this->client->translate(
             $content,
@@ -42,11 +40,11 @@ class GoogleBasicTranslationService implements TranslationService
      * Detect the language of the given content.
      *
      * @param string $content
+     *
      * @return string
      */
-    public function detectLanguage(string $content): string
-    {
-        return $this->client->detectLanguage($content)['languageCode'];
+    public function detectLanguage( string $content ): string {
+        return $this->client->detectLanguage( $content )['languageCode'];
     }
 
     /**
@@ -54,22 +52,21 @@ class GoogleBasicTranslationService implements TranslationService
      *
      * @return array
      */
-    public function supportedLanguages(): array
-    {
-        return Cache::remember('supported_languages', 86400, function () {
+    public function supportedLanguages(): array {
+        return Cache::remember( 'supported_languages', 86400, function() {
             return $this->client->languages();
-        });
+        } );
     }
 
     /**
      * Return the format based on the $format.
      *
      * @param string $format
+     *
      * @return string
      */
-    private function getFormat(string $format): string
-    {
-        if ($format === 'text') {
+    private function getFormat( string $format ): string {
+        if( $format === 'text' ) {
             return 'text';
         }
 
