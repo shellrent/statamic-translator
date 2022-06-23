@@ -46,15 +46,27 @@ trait TranslatesData {
     }
 
     protected function translatedData(): array {
-        $translatedFields = $this->getTranslatableFieldKeys();
+        $translatedFieldKeys = $this->getTranslatableFieldKeys();
         $data = $this->dataToTranslate();
 
-        return $this->translateSetDataRecursive( $translatedFields, $data );
+        return $this->translateSetDataRecursive( $translatedFieldKeys, $data );
     }
 
     private function translateSetDataRecursive( array $validKeys, array $data ) {
         foreach( $data as $key => $value ) {
             if( !isset( $validKeys[$key] ) ) {
+                continue;
+            }
+
+            if( is_array( $value ) and $validKeys[$key] === '@seo' ) {
+                foreach( $value as $seoKey => $seoValue ) {
+                    if( strpos( $seoValue, '@seo:' ) === 0 ) {
+                        continue;
+                    }
+
+                    $data[$key][$seoKey] = $this->translateValue( $seoValue );
+                }
+
                 continue;
             }
 
@@ -73,11 +85,12 @@ trait TranslatesData {
                     }
                 }
 
-            } else {
-                $translated = $this->translateValue( $value );
-
-                $data[$key] = $translated;
+                continue;
             }
+
+            $translated = $this->translateValue( $value );
+
+            $data[$key] = $translated;
         }
 
         return $data;

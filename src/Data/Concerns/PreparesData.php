@@ -3,6 +3,7 @@
 namespace Aerni\Translator\Data\Concerns;
 
 trait PreparesData {
+
     /**
      * Get the blueprint fields that are localizable.
      *
@@ -53,7 +54,7 @@ trait PreparesData {
             ->filter( function( $item ) {
                 $supportedFieldtypes = [
                     'array', 'bard', 'grid', 'list', 'markdown', 'replicator',
-                    'slug', 'table', 'tags', 'text', 'textarea',
+                    'slug', 'table', 'tags', 'text', 'textarea', 'seo_pro'
                 ];
 
                 if( !isset( $item['type'] ) ) {
@@ -139,6 +140,8 @@ trait PreparesData {
                     }
 
                     break;
+                case 'seo_pro':
+                    return '@seo';
             }
 
             return $key;
