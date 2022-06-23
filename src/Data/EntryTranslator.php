@@ -24,11 +24,13 @@ class EntryTranslator extends BasicTranslator {
         }
 
         $slug = $this->entry->root()->slug();
+
         return TranslationService::translateText( Str::deslugify( $slug ), $this->targetLanguage(), 'text' );
     }
 
     protected function translate(): void {
-        $this->entry->data( $this->translatedData() )
+        $this->entry
+            ->data( $this->translatedData() )
             ->slug( $this->slug() );
     }
 

@@ -49,8 +49,7 @@ trait TranslatesData {
         $translatedFields = $this->getTranslatableFieldKeys();
         $data = $this->dataToTranslate();
 
-
-        $result = $this->translateSetDataRecursive( $translatedFields, $data );
+        return $this->translateSetDataRecursive( $translatedFields, $data );
     }
 
     private function translateSetDataRecursive( array $validKeys, array $data ) {
@@ -60,9 +59,19 @@ trait TranslatesData {
             }
 
             if( is_array( $value ) ) {
+                foreach( $value as $itemKey => $item ) {
+                    if( isset( $item['type'] ) ) {
+                        if( isset( $validKeys[$key][$item['type']] ) ) {
+                            $data[$key][$itemKey] = $this->translateSetDataRecursive( $validKeys[$key][$item['type']], $item );
 
+                        } else {
+                            $data[$key][$itemKey] = $this->translateSetDataRecursive( $validKeys[$key], $item );
+                        }
 
-                $data[$key] = $this->translateSetDataRecursive( $validKeys[$key], $value );
+                    } else {
+                        $data[$key][$itemKey] = $this->translateSetDataRecursive( $validKeys[$key], $item );
+                    }
+                }
 
             } else {
                 $translated = $this->translateValue( $value );
@@ -103,8 +112,4 @@ trait TranslatesData {
 
         return TranslationService::translateText( $value, $this->targetLanguage(), 'text' );
     }
-
-
-
-
 }

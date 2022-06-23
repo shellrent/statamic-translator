@@ -2,44 +2,19 @@
 
 namespace Aerni\Translator\Data\Concerns;
 
-use Aerni\Translator\Support\Utils;
-use Illuminate\Support\Collection;
-
 trait PreparesData {
     /**
      * Get the blueprint fields that are localizable.
      *
      * @return array
      */
-    protected function localizableFields(): array {
+    private function localizableFields(): array {
         return $this->entry->blueprint()
             ->fields()
             ->localizable()
             ->all()
             ->toArray();
     }
-
-    /**
-     * Get the translatable fields. A field is considered translatable
-     * when 'localizable' is set to 'true' in the blueprint and
-     * the type of field is supported by Translator.
-     *
-     * @return array
-     */
-    protected function translatableFields(): array {
-        return $this->filterSupportedFieldtypes( $this->localizableFields() );
-    }
-
-
-    /**
-     * Get the keys of translatable fields.
-     *
-     * @return array
-     */
-    protected function getTranslatableFieldKeys(): array {
-        return $this->generateTranslatableFieldKeys( $this->translatableFields() );
-    }
-
 
     /**
      * Filter the fields by supported fieldtypes.
@@ -168,5 +143,27 @@ trait PreparesData {
 
             return $key;
         } )->toArray();
+    }
+
+
+    /**
+     * Get the translatable fields. A field is considered translatable
+     * when 'localizable' is set to 'true' in the blueprint and
+     * the type of field is supported by Translator.
+     *
+     * @return array
+     */
+    protected function translatableFields(): array {
+        return $this->filterSupportedFieldtypes( $this->localizableFields() );
+    }
+
+
+    /**
+     * Get the keys of translatable fields.
+     *
+     * @return array
+     */
+    protected function getTranslatableFieldKeys(): array {
+        return $this->generateTranslatableFieldKeys( $this->translatableFields() );
     }
 }
