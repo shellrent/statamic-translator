@@ -7,55 +7,8 @@ use Facades\Aerni\Translator\Contracts\TranslationService;
 use Statamic\Facades\Site;
 
 trait TranslatesData {
-    abstract protected function dataToTranslate(): array;
 
-    protected function translatedData(): array {
-        return Utils::array_map_recursive(
-            $this->dataToTranslate(),
-            function( $value, $key ) {
-                return $this->translateValue( $value, $key );
-            }
-        );
-    }
-
-    /**
-     * Translate a given string value.
-     *
-     * @param mixed $value
-     * @param string $key
-     *
-     * @return mixed
-     */
-    protected function translateValue( $value, string $key ) {
-        if( !$this->isTranslatableKeyValuePair( $value, $key ) ) {
-            return $value;
-        }
-
-        if( Utils::isHtml( $value ) ) {
-            return TranslationService::translateText( $value, $this->targetLanguage(), 'html' );
-        }
-
-        return TranslationService::translateText( $value, $this->targetLanguage(), 'text' );
-    }
-
-    /**
-     * Get the language for translation.
-     *
-     * @return string
-     */
-    protected function targetLanguage(): string {
-        return Site::get( $this->site )->shortLocale();
-    }
-
-    /**
-     * Check if a key-value pair should be translated.
-     *
-     * @param mixed $value
-     * @param string $key
-     *
-     * @return bool
-     */
-    protected function isTranslatableKeyValuePair( $value, string $key ): bool {
+    private function isTranslatableValue( $value ) {
         if( empty( $value ) ) {
             return false;
         }
@@ -68,21 +21,90 @@ trait TranslatesData {
             return false;
         }
 
-        // Skip 'type: $value', where $value is a Bard/Replicator set key.
-        if( $key === 'type' && Utils::array_key_exists_recursive( $value, $this->fieldKeys()['setKeys'] ) ) {
+        if( is_array( $value ) ) {
             return false;
         }
 
-        // Skip if $key doesn't exists in the fieldset.
-        if( !Utils::array_key_exists_recursive( $key, $this->fieldKeys()['allKeys'] ) && !is_numeric( $key ) ) {
-            return false;
-        }
-
-        // Skip if $value is in the target locale.
         if( TranslationService::detectLanguage( $value ) === $this->targetLanguage() ) {
             return false;
         }
 
         return true;
     }
+
+    /**
+     * Get the data to translate.
+     *
+     * @return array
+     */
+    protected function dataToTranslate(): array {
+        return $this
+            ->rootData()
+            ->intersectByKeys( $this->translatableFields() )
+            ->except( [ 'updated_by', 'updated_at' ] )
+            ->toArray();
+    }
+
+    protected function translatedData(): array {
+        $translatedFields = $this->getTranslatableFieldKeys();
+        $data = $this->dataToTranslate();
+
+
+        $result = $this->translateSetDataRecursive( $translatedFields, $data );
+    }
+
+    private function translateSetDataRecursive( array $validKeys, array $data ) {
+        foreach( $data as $key => $value ) {
+            if( !isset( $validKeys[$key] ) ) {
+                continue;
+            }
+
+            if( is_array( $value ) ) {
+
+
+                $data[$key] = $this->translateSetDataRecursive( $validKeys[$key], $value );
+
+            } else {
+                $translated = $this->translateValue( $value );
+
+                $data[$key] = $translated;
+            }
+        }
+
+        return $data;
+    }
+
+
+    /**
+     * Get the language for translation.
+     *
+     * @return string
+     */
+    protected function targetLanguage(): string {
+        return Site::get( $this->site )->shortLocale();
+    }
+
+    /**
+     * Translate a given string value.
+     *
+     * @param mixed $value
+     * @param string $key
+     *
+     * @return string
+     */
+    protected function translateValue( $value ) {
+        if( !$this->isTranslatableValue( $value ) ) {
+            return $value;
+        }
+
+        if( Utils::isHtml( $value ) ) {
+            return TranslationService::translateText( $value, $this->targetLanguage(), 'html' );
+        }
+
+        return TranslationService::translateText( $value, $this->targetLanguage(), 'text' );
+    }
+
+
+
+
 }
