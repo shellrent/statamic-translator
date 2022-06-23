@@ -117,6 +117,14 @@ trait PreparesData {
                                     continue;
                                 }
 
+                                if( strpos( $replicatorSetFieldKey, 'icon-' ) === 0 ) {
+                                    continue;
+                                }
+
+                                if( strpos( $replicatorSetFieldKey, 'icon_' ) === 0 ) {
+                                    continue;
+                                }
+
                                 $replicatorSetFields = array_merge( $replicatorSetFields, $this->generateTranslatableFieldKeys( [
                                     $replicatorSetFieldKey => $replicatorSetField['field']
                                 ] ));

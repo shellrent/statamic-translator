@@ -52,14 +52,14 @@ class RequestValidator {
         if( $entry instanceof \Statamic\Entries\Entry ) {
             return true;
         }
-
-        if( $entry instanceof \Statamic\Globals\GlobalSet ) {
-            return true;
-        }
-
-        if( $entry instanceof \Statamic\Taxonomies\LocalizedTerm ) {
-            return true;
-        }
+        //disabilitati, non aggiornati all'ultima versione
+//        if( $entry instanceof \Statamic\Globals\GlobalSet ) {
+//            return true;
+//        }
+//
+//        if( $entry instanceof \Statamic\Taxonomies\LocalizedTerm ) {
+//            return true;
+//        }
 
         throw TranslationFailed::unsupportedContentType();
     }
