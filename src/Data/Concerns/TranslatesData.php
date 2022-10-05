@@ -73,15 +73,19 @@ trait TranslatesData {
             if( is_array( $value ) ) {
                 foreach( $value as $itemKey => $item ) {
                     if( isset( $item['type'] ) ) {
-                        if( isset( $validKeys[$key][$item['type']] ) ) {
-                            $data[$key][$itemKey] = $this->translateSetDataRecursive( $validKeys[$key][$item['type']], $item );
-
-                        } else {
-                            $data[$key][$itemKey] = $this->translateSetDataRecursive( $validKeys[$key], $item );
+                        if( isset( $validKeys[ $key ][ $item['type'] ] ) ) {
+                            $data[ $key ][ $itemKey ] = $this->translateSetDataRecursive( $validKeys[ $key ][ $item['type'] ], $item );
+                            continue;
                         }
+                    }
 
-                    } else {
+                    if( is_array( $validKeys[$key] ) and is_array( $item ) ) {
                         $data[$key][$itemKey] = $this->translateSetDataRecursive( $validKeys[$key], $item );
+                        continue;
+                    }
+
+                    if( !is_array( $validKeys[$key] ) and !is_array( $item ) ) {
+                        $data[$key][$itemKey] = $this->translateValue( $item );
                     }
                 }
 

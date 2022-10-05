@@ -111,6 +111,10 @@ trait PreparesData {
                             $replicatorSetFields = [];
 
                             foreach( $set['fields'] as $replicatorSetField ) {
+                                if( !isset( $replicatorSetField['handle'] ) ) {
+                                    continue;
+                                }
+
                                 $replicatorSetFieldKey = $replicatorSetField['handle'];
                                 //chiodato icon per evitare di tradurre icone nei replicator
                                 if( $replicatorSetFieldKey == 'icon' ) {
